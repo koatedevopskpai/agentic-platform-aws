@@ -6,7 +6,7 @@ This repository is an engineering portfolio that demonstrates owning the AI plat
 
 ---
 
-## What this proves (recruiter-facing)
+## What this proves
 
 | Scenario | What it demonstrates |
 |---|---|
