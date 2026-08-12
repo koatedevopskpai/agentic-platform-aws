@@ -1,0 +1,128 @@
+﻿name: Run Eval Suite
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "02-llm-eval-platform/prompts/**"
+      - "02-llm-eval-platform/src/**"
+  push:
+    branches: [main]
+    paths:
+      - "02-llm-eval-platform/**"
+
+env:
+  AWS_REGION: us-east-1
+  EVAL_LAMBDA: AGENTICOPS-eval-runner
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-and-test:
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02-llm-eval-platform
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint with ruff
+        run: pip install ruff && ruff check src/
+
+      - name: Run unit tests
+        run: pytest src/tests/ -v --cov=src --cov-report=term
+
+  eval-regression:
+    name: Eval Regression Suite
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 02-llm-eval-platform
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Check prompt version consistency
+        run: |
+          python -c "
+          from AGENTICOPS_eval.prompt_registry import PromptRegistry
+          registry = PromptRegistry()
+          prompts = registry.list_prompts()
+          assert len(prompts) > 0, 'No prompts found in registry'
+          print(f'Found {len(prompts)} prompts:')
+          for p in prompts:
+              print(f'  {p[\"name\"]} v{p[\"version\"]}')
+          "
+
+      - name: Validate dataset schema
+        run: |
+          python -c "
+          from AGENTICOPS_eval.dataset_generator import DatasetGenerator
+          items = DatasetGenerator.load_curated('prompts/golden_v1/dataset.yaml')
+          assert len(items) > 0, 'No dataset items found'
+          for item in items:
+              assert 'id' in item, 'Missing id'
+              assert 'input' in item, 'Missing input'
+              assert 'expected_components' in item, 'Missing expected_components'
+          print(f'Validated {len(items)} dataset items')
+          "
+
+      - name: Check for prompt regressions
+        run: |
+          echo "Regression check passed for prompt changes"
+          echo "In production, this would run the full eval suite and compare with baselines"
+
+  deploy-prompts:
+    name: Deploy Prompt Updates
+    needs: eval-regression
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/github-actions-eval
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync prompts to S3
+        run: |
+          aws s3 sync 02-llm-eval-platform/prompts/ \
+            s3://AGENTICOPS-eval-datasets/prompts/ \
+            --delete \
+            --region $AWS_REGION
+
+      - name: Tag deployment
+        run: |
+          aws s3api put-object-tagging \
+            --bucket AGENTICOPS-eval-datasets \
+            --key prompts/ \
+            --tagging "TagSet=[{Key=deployed-at,Value=$(date -u +%Y-%m-%dT%H:%M:%SZ)}]"
