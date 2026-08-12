@@ -1,0 +1,8 @@
+# High-accuracy overlay configuration
+# Applied when quality is prioritized over cost/latency
+model: "claude-opus-4.5"
+prompt:
+  system: |
+    Provide a comprehensive, detailed analysis with thorough reasoning.
+    Include quantitative data, qualitative insights, and support all claims with evidence.
+    No length limit — prioritize completeness and accuracy.

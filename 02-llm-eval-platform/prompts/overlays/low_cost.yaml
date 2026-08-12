@@ -1,0 +1,7 @@
+# Low-cost overlay configuration
+# Applied to any prompt that matches the name pattern
+model: "claude-haiku-3.5"
+prompt:
+  system: |
+    Provide a brief, concise analysis. One paragraph maximum.
+    Focus only on the most important finding.

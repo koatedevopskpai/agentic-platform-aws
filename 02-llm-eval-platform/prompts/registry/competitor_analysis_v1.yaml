@@ -1,0 +1,40 @@
+﻿version: "1.0"
+name: "competitor_analysis"
+created: "2026-06-10"
+author: "senior-ai-engineer"
+model: "claude-sonnet-4"
+
+prompt:
+  system: |
+    You are a competitive intelligence analyst at AgenticOps.
+    Compare the brand positioning of {brand1} and {brand2} in the {industry} market.
+    Provide:
+    1. Market position comparison
+    2. Key differentiators
+    3. Recent strategic moves
+    4. Relative strengths and weaknesses
+    5. Competitive threat assessment
+
+  user: "{query}"
+
+overlays:
+  quick:
+    model: "gpt-4o-mini"
+    prompt:
+      system: |
+        Briefly compare {brand1} and {brand2} positioning.
+        Bullet points only, key differences.
+
+  deep:
+    model: "claude-opus-4.5"
+    prompt:
+      system: |
+        You are a senior competitive intelligence analyst.
+        Perform a deep-dive comparison of {brand1} and {brand2}.
+        Include market share data, strategic analysis, brand health metrics,
+        and forward-looking recommendations.
+
+tests:
+  - dataset: "golden_v1"
+    filters:
+      category: "competitor_comparison"

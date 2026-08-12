@@ -1,0 +1,31 @@
+﻿[project]
+name = "AGENTICOPS-eval"
+version = "0.1.0"
+description = "AgenticOps LLM Eval Platform - Evaluation, Observability & Guardrails"
+requires-python = ">=3.11"
+dependencies = [
+    "langchain-anthropic>=0.3.0",
+    "langchain-openai>=0.3.0",
+    "langchain-core>=0.3.0",
+    "boto3>=1.35.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "pyyaml>=6.0",
+    "httpx>=0.28.0",
+]
+
+[project.scripts]
+AGENTICOPS-eval = "AGENTICOPS_eval.main:main"
+AGENTICOPS-guard = "AGENTICOPS_eval.main:run_guard"
+AGENTICOPS-dashboard = "AGENTICOPS_eval.main:run_dashboard"
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/tests"]
+python_files = ["test_*.py"]

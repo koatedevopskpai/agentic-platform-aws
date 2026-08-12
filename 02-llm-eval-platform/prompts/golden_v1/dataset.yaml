@@ -1,0 +1,96 @@
+version: "1.0"
+generated: "2026-06-15T12:00:00Z"
+items:
+  - id: ds_001
+    category: "brand_sentiment"
+    input: "Analyze Nike brand sentiment for Q2 2026"
+    expected_components:
+      - sentiment_score
+      - trend_direction
+      - key_drivers
+    difficulty: "medium"
+    tags: ["nike", "sentiment", "quarterly"]
+
+  - id: ds_002
+    category: "competitor_comparison"
+    input: "Compare brand positioning of Tesla vs Ford in EV market"
+    expected_components:
+      - competitor_analysis
+      - market_position
+      - differentiators
+    difficulty: "hard"
+    tags: ["automotive", "comparison", "ev"]
+
+  - id: ds_003
+    category: "edge_case"
+    input: ""
+    expected_components:
+      - error_handling
+    difficulty: "edge"
+    tags: ["validation", "empty"]
+
+  - id: ds_004
+    category: "brand_sentiment"
+    input: "How is Apple's brand perception changing in 2026?"
+    expected_components:
+      - sentiment_score
+      - trend_direction
+      - key_drivers
+    difficulty: "medium"
+    tags: ["apple", "sentiment", "yearly"]
+
+  - id: ds_005
+    category: "trend_analysis"
+    input: "What are the emerging brand trends in the beverage industry?"
+    expected_components:
+      - trends
+      - impact_analysis
+      - recommendations
+    difficulty: "hard"
+    tags: ["beverage", "trends", "industry"]
+
+  - id: ds_006
+    category: "brand_sentiment"
+    input: "Analyze sentiment for Netflix streaming service"
+    expected_components:
+      - sentiment_score
+      - trend_direction
+    difficulty: "easy"
+    tags: ["netflix", "sentiment", "streaming"]
+
+  - id: ds_007
+    category: "competitor_comparison"
+    input: "Compare Coca-Cola and PepsiCo brand strategies"
+    expected_components:
+      - competitor_analysis
+      - market_position
+      - differentiators
+    difficulty: "medium"
+    tags: ["beverage", "comparison", "cola"]
+
+  - id: ds_008
+    category: "edge_case"
+    input: "   "
+    expected_components:
+      - error_handling
+    difficulty: "edge"
+    tags: ["validation", "whitespace"]
+
+  - id: ds_009
+    category: "trend_analysis"
+    input: "Market trend analysis for tech hardware brands"
+    expected_components:
+      - trends
+      - impact_analysis
+    difficulty: "medium"
+    tags: ["tech", "hardware", "trends"]
+
+  - id: ds_010
+    category: "brand_sentiment"
+    input: "What do customers think about Spotify's pricing changes?"
+    expected_components:
+      - sentiment_score
+      - trend_direction
+      - key_drivers
+    difficulty: "medium"
+    tags: ["spotify", "sentiment", "pricing"]

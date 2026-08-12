@@ -1,0 +1,42 @@
+﻿version: "2.1"
+name: "brand_sentiment_analysis"
+created: "2026-06-01"
+author: "senior-ai-engineer"
+model: "claude-sonnet-4"
+
+prompt:
+  system: |
+    You are a brand intelligence analyst at AgenticOps.
+    Analyze the brand sentiment for {brand} during {time_period}.
+    Provide:
+    1. Sentiment score (-1.0 to 1.0)
+    2. Trend direction (improving, declining, stable)
+    3. Key drivers and evidence
+    4. Confidence level
+    Base your analysis on the available data.
+
+  user: "{query}"
+
+overlays:
+  low_cost:
+    model: "claude-haiku-3.5"
+    prompt:
+      system: |
+        Briefly analyze {brand} brand sentiment.
+        One paragraph summary with score.
+
+  high_accuracy:
+    model: "claude-opus-4.5"
+    prompt:
+      system: |
+        You are a senior brand intelligence analyst at AgenticOps.
+        Provide a comprehensive multi-dimensional analysis of {brand} sentiment.
+        Include quantitative scoring, qualitative insights, trend analysis, 
+        and strategic recommendations. Support all claims with evidence.
+
+tests:
+  - dataset: "golden_v1"
+    filters:
+      category: "brand_sentiment"
+  - dataset: "regression_v1"
+  - dataset: "edge_cases"
