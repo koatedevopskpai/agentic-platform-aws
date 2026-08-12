@@ -81,4 +81,17 @@ See each scenario's `deployment.md` for details.
 
 ---
 
-*Portfolio by koate-kpai. Companion repos: this platform's eval stack, `llm-evals-demo` (RAGAS CI gate) and `gem-agentic-ai` (agent frameworks).*
+## Companion repos
+
+| Repo | What it is |
+|---|---|
+| [agentic-platform-aws](https://github.com/koate-kpai/agentic-platform-aws) | This repo — the agentic AI platform on AWS |
+| [llm-evals-demo](https://github.com/koate-kpai/llm-evals-demo) | RAGAS golden-set eval gate wired into CI (the eval stack this platform designs) |
+| [gem-agentic-ai](https://github.com/koate-kpai/gem-agentic-ai) | ReAct loop + LangGraph agent frameworks, 90% coverage |
+| [gem-langchain-rag](https://github.com/koate-kpai/gem-langchain-rag) | Production RAG pipeline with citations and hallucination control |
+| [bedrock-agentic-demo](https://github.com/koate-kpai/bedrock-agentic-demo) | AWS Bedrock + Claude agent demo with Terraform and CI |
+| [quant-research-ig](https://github.com/koate-kpai/quant-research-ig) | Agentic finance platform: LangGraph agents, 317 tests / 91% coverage |
+
+---
+
+*Portfolio by [George Kpai](https://github.com/koate-kpai).*
