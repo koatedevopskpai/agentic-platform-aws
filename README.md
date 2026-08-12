@@ -94,4 +94,4 @@ See each scenario's `deployment.md` for details.
 
 ---
 
-*Portfolio by [George Kpai](https://github.com/koate-kpai).*
+*Portfolio by koate-kpai.*
