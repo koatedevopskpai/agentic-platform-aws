@@ -81,4 +81,4 @@ See each scenario's `deployment.md` for details.
 
 ---
 
-*Portfolio by George Kpai — github.com/koate-kpai. Companion repos: this platform's eval stack, `llm-evals-demo` (RAGAS CI gate) and `gem-agentic-ai` (agent frameworks).*
+*Portfolio by koate-kpai. Companion repos: this platform's eval stack, `llm-evals-demo` (RAGAS CI gate) and `gem-agentic-ai` (agent frameworks).*
