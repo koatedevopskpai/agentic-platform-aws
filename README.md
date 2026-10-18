@@ -1,12 +1,16 @@
 ﻿# AgenticOps — Agentic AI Platform on AWS (Portfolio)
 
-**Production-grade AI platform design and implementation: multi-agent orchestration, an LLM evaluation platform, and cloud infrastructure as code (AWS, Terraform).**
+**AI platform reference design and implementation: multi-agent orchestration, an LLM evaluation platform, and cloud infrastructure as code (AWS, Terraform).**
 
-This repository is an engineering portfolio that demonstrates owning the AI platform layer end-to-end: designing agent topologies, building eval gates that let teams ship LLM features with confidence, treating prompts as code, and standing up the AWS substrate with IaC.
+This repository contains agent/evaluation reference code, cloud configuration and
+design documents. The current validation attempt stops before test collection on an
+invalid scenario TOML file; it does not establish a working deployment or a passing
+suite. See [the claim-sweep evidence](evidence/W5-06.md). Files under `shared/ci-cd/`
+are pipeline templates; no GitHub Actions run was returned for `main`.
 
 ---
 
-## What this proves
+## Implementation and design scope
 
 | Scenario | What it demonstrates |
 |---|---|
@@ -34,7 +38,7 @@ This repository is an engineering portfolio that demonstrates owning the AI plat
 shared/                       CI/CD pipelines, utility scripts
 ```
 
-## Design principles
+## Design goals (not deployment evidence)
 
 | Principle | Practice |
 |---|---|
@@ -61,7 +65,7 @@ shared/                       CI/CD pipelines, utility scripts
 ## Getting started
 
 ```bash
-git clone https://github.com/koate-kpai/agentic-platform-aws
+git clone https://github.com/koatedevopskpai/agentic-platform-aws
 cd agentic-platform-aws
 
 # Scenario 01 — multi-agent orchestration
@@ -85,13 +89,13 @@ See each scenario's `deployment.md` for details.
 
 | Repo | What it is |
 |---|---|
-| [agentic-platform-aws](https://github.com/koate-kpai/agentic-platform-aws) | This repo — the agentic AI platform on AWS |
-| [llm-evals-demo](https://github.com/koate-kpai/llm-evals-demo) | RAGAS golden-set eval gate wired into CI (the eval stack this platform designs) |
-| [gem-agentic-ai](https://github.com/koate-kpai/gem-agentic-ai) | ReAct loop + LangGraph agent frameworks, 90% coverage |
-| [gem-langchain-rag](https://github.com/koate-kpai/gem-langchain-rag) | Production RAG pipeline with citations and hallucination control |
-| [bedrock-agentic-demo](https://github.com/koate-kpai/bedrock-agentic-demo) | AWS Bedrock + Claude agent demo with Terraform and CI |
-| [quant-research-ig](https://github.com/koate-kpai/quant-research-ig) | Agentic finance platform: LangGraph agents, 317 tests / 91% coverage |
+| [agentic-platform-aws](https://github.com/koatedevopskpai/agentic-platform-aws) | This repo — the agentic AI platform on AWS |
+| [llm-evals-demo](https://github.com/koatedevopskpai/llm-evals-demo) | RAGAS golden-set eval gate wired into CI (the eval stack this platform designs) |
+| [gem-agentic-ai](https://github.com/koatedevopskpai/gem-agentic-ai) | ReAct loop and LangGraph reference agents; dated checks live in that repository |
+| [gem-langchain-rag](https://github.com/koatedevopskpai/gem-langchain-rag) | RAG reference pipeline with citation prompting; answer quality requires evaluation |
+| [bedrock-agentic-demo](https://github.com/koatedevopskpai/bedrock-agentic-demo) | AWS Bedrock + Claude agent demo with Terraform and CI |
+| [quant-research-ig](https://github.com/koatedevopskpai/quant-research-ig) | Agentic finance reference modules; current test evidence belongs to that repository |
 
 ---
 
-*Portfolio by koate-kpai.*
+*Portfolio by Koate Kpai — https://github.com/koatedevopskpai.*
