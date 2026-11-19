@@ -1,7 +1,10 @@
 from typing import Optional
 import httpx
 import json
+import logging
 from datetime import datetime, timedelta
+
+log = logging.getLogger(__name__)
 
 
 async def search_news_impl(
@@ -16,7 +19,7 @@ async def search_news_impl(
         date_to = datetime.utcnow().strftime("%Y-%m-%d")
 
     try:
-        async with httpx.AClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.get(
                 "https://newsapi.org/v2/everything",
                 params={
@@ -41,8 +44,12 @@ async def search_news_impl(
                 for article in data.get("articles", [])
             ]
     except Exception as e:
+        # Never present fallback data as a real result: flag it so callers and tests can tell.
+        log.warning("search_news failed, returning flagged demonstration data: %s: %s", type(e).__name__, e)
         return [
             {
+                "degraded": True,
+                "degraded_reason": f"{type(e).__name__}: {e}",
                 "title": f"Sample news result for: {query}",
                 "source": "NewsAPI",
                 "published_at": datetime.utcnow().isoformat(),

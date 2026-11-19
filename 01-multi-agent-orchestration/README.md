@@ -18,7 +18,10 @@ uv sync
 # or pip install -e .
 
 # Run the orchestrator
-AGENTICOPS-orchestrator --query "Analyze brand sentiment for Nike and compare with Adidas"
+agenticops-orchestrator --query "Analyze brand sentiment for Nike and compare with Adidas"   # needs ANTHROPIC / OPENAI keys and AWS credentials
+
+# Tests run offline (no keys, no AWS):
+pip install -e ".[dev]" && pytest
 ```
 
 ## Architecture

@@ -1,12 +1,12 @@
 ﻿import pytest
-from AGENTICOPS_orchestrator.models import (
+from agenticops_orchestrator.models import (
     TaskPlan,
     WorkerOutput,
     CritiqueResult,
     BrandAnalysis,
     ParsedQuery,
 )
-from AGENTICOPS_orchestrator.tools import (
+from agenticops_orchestrator.tools import (
     search_news_impl,
     fetch_competitor_data_impl,
     fetch_social_mentions_impl,
@@ -128,13 +128,13 @@ class TestTools:
 
 class TestOrchestrator:
     def test_build_graph(self):
-        from AGENTICOPS_orchestrator.orchestrator import build_graph
+        from agenticops_orchestrator.orchestrator import build_graph
         graph = build_graph()
         assert graph is not None
         assert hasattr(graph, "invoke")
 
     def test_graph_structure(self):
-        from AGENTICOPS_orchestrator.orchestrator import build_graph
+        from agenticops_orchestrator.orchestrator import build_graph
         graph = build_graph()
         nodes = list(graph.get_graph().nodes.keys())
         expected = [
