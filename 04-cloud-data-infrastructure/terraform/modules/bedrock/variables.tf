@@ -6,7 +6,7 @@ variable "environment" {
 variable "provisioned_models" {
   description = "Map of provisioned models"
   type = map(object({
-    model_id             = string
+    model_arn            = string
     model_units          = number
     commitment_duration  = string
   }))

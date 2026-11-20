@@ -78,6 +78,9 @@ class SafetyClassifier:
         (r"\b(hate|discriminat|racist|sexist)\b", "hate_speech"),
         (r"\b(suicide|self.?harm|self.?delete)\b", "self_harm"),
         (r"\b(drugs|illegal|weapon|explosive)\b.*\b(how|make|create|buy)", "illegal_activity"),
+        # Acquisition verb first ("buy illegal drugs", "make an explosive"). Verbs are limited to acquisition/creation so
+        # that benign questions such as "how do drugs affect sleep" are not flagged.
+        (r"\b(buy|purchase|make|create|build|synthesi[sz]e|obtain)\b.*\b(illegal|drugs|weapons?|explosives?)", "illegal_activity"),
         (r"\b(explicit|porn|sexual)\s+content", "adult_content"),
     ]
 

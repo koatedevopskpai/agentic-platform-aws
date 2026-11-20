@@ -8,27 +8,11 @@ from .agents import (
     BrandSentimentWorker,
     CompetitorPositioningWorker,
     TrendAnalysisWorker,
+    get_opus,
+    get_sonnet,
 )
 from .models import CritiqueResult
-from .config import settings
 from .session_store import SessionStore
-
-from langchain_anthropic import ChatAnthropic
-
-opus = ChatAnthropic(
-    model="claude-opus-4-20250514",
-    temperature=0.1,
-    max_tokens=4096,
-    api_key=settings.anthropic_api_key,
-)
-
-sonnet = ChatAnthropic(
-    model="claude-sonnet-4-20250514",
-    temperature=0.1,
-    max_tokens=4096,
-    api_key=settings.anthropic_api_key,
-)
-
 
 class AgentState(TypedDict):
     query: str
@@ -68,7 +52,7 @@ def dispatch_workers(state: AgentState) -> AgentState:
     for task in state["plan"]:
         worker_class = worker_map.get(task.get("worker_type"))
         if worker_class:
-            worker = worker_class(llm=sonnet)
+            worker = worker_class(llm=get_sonnet())
             try:
                 result = worker.run(task, state["session_id"])
                 results.append(result)
@@ -118,7 +102,7 @@ def synthesize(state: AgentState) -> AgentState:
         },
     ]
 
-    response = opus.invoke(messages)
+    response = get_opus().invoke(messages)
     state["synthesis"] = response.content
 
     SessionStore.append_event(
@@ -145,7 +129,7 @@ def reflect(state: AgentState) -> AgentState:
         },
     ]
 
-    critique = opus.with_structured_output(CritiqueResult).invoke(messages)
+    critique = get_opus().with_structured_output(CritiqueResult).invoke(messages)
     state["critique"] = critique.model_dump()
 
     SessionStore.append_event(
@@ -169,7 +153,7 @@ def rewrite(state: AgentState) -> AgentState:
         },
     ]
 
-    response = opus.invoke(messages)
+    response = get_opus().invoke(messages)
     state["synthesis"] = response.content
     state["max_retries"] -= 1
 

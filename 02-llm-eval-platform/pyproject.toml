@@ -1,5 +1,5 @@
-﻿[project]
-name = "AGENTICOPS-eval"
+[project]
+name = "agenticops-eval"
 version = "0.1.0"
 description = "AgenticOps LLM Eval Platform - Evaluation, Observability & Guardrails"
 requires-python = ">=3.11"
@@ -14,17 +14,24 @@ dependencies = [
     "httpx>=0.28.0",
 ]
 
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+
+# One entry point with sub-commands: `agenticops-eval eval|generate-dataset|guard|dashboard ...`
+# (the previous separate guard/dashboard scripts pointed at functions that need a parsed-args argument).
 [project.scripts]
-AGENTICOPS-eval = "AGENTICOPS_eval.main:main"
-AGENTICOPS-guard = "AGENTICOPS_eval.main:run_guard"
-AGENTICOPS-dashboard = "AGENTICOPS_eval.main:run_dashboard"
+agenticops-eval = "agenticops_eval.main:main"
 
 [build-system]
 requires = ["setuptools>=75.0"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+# The modules live directly in src/, which is the package directory. Map it to a valid lowercase package name.
+[tool.setuptools]
+packages = ["agenticops_eval", "agenticops_eval.tests"]
+
+[tool.setuptools.package-dir]
+agenticops_eval = "src"
 
 [tool.pytest.ini_options]
 testpaths = ["src/tests"]

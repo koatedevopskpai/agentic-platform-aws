@@ -138,7 +138,7 @@ resource "aws_cloudwatch_metric_alarm" "high_latency" {
   metric_name         = "AgentLatency"
   namespace           = "AgenticOps"
   period              = 300
-  statistic           = "p95"
+  extended_statistic  = "p95"
   threshold           = var.high_latency_threshold_ms
   alarm_description   = "Agent latency exceeds ${var.high_latency_threshold_ms}ms p95"
   alarm_actions       = var.alarm_sns_topics

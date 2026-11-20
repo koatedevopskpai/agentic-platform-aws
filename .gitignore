@@ -12,3 +12,14 @@ venv/
 .ruff_cache/
 .pytest_cache/
 .mlruns/
+
+# Python build artefacts
+build/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+
+# Terraform local state and provider cache
+.terraform/
+*.tfstate
+*.tfstate.*

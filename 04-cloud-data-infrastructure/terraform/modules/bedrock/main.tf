@@ -4,9 +4,10 @@
 resource "aws_bedrock_provisioned_model_throughput" "this" {
   for_each = var.provisioned_models
 
-  model_units      = each.value.model_units
-  model_id         = each.value.model_id
-  commitment_duration = each.value.commitment_duration
+  provisioned_model_name = each.key
+  model_arn              = each.value.model_arn
+  model_units            = each.value.model_units
+  commitment_duration    = each.value.commitment_duration
 
   tags = {
     Environment = var.environment
@@ -84,6 +85,7 @@ resource "aws_bedrock_guardrail" "content_policy" {
       type   = "US_SOCIAL_SECURITY_NUMBER"
     }
     regexes_config {
+      name        = "aws-access-key"
       action      = "BLOCK"
       description = "AWS Access Key"
       pattern     = "AKIA[0-9A-Z]{16}"
@@ -98,7 +100,7 @@ resource "aws_bedrock_guardrail" "content_policy" {
 
 resource "aws_bedrock_guardrail_version" "content_policy" {
   count          = var.create_guardrails ? 1 : 0
-  guardrail_arn  = aws_bedrock_guardrail.content_policy[0].arn
+  guardrail_arn  = aws_bedrock_guardrail.content_policy[0].guardrail_arn
   description    = "Auto-versioned deployment"
   skip_destroy   = false
 }

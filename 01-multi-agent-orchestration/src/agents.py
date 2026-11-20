@@ -1,30 +1,41 @@
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
+from functools import lru_cache
 from typing import Any
 from .models import TaskPlan, WorkerOutput, CritiqueResult, ParsedQuery
 from .config import settings
 
-sonnet = ChatAnthropic(
-    model="claude-sonnet-4-20250514",
-    temperature=0.1,
-    max_tokens=4096,
-    api_key=settings.anthropic_api_key,
-)
+# Clients are created on first use, not at import, so importing the package (and building the graph in tests)
+# needs no API keys.
+@lru_cache(maxsize=None)
+def get_sonnet() -> ChatAnthropic:
+    return ChatAnthropic(
+        model="claude-sonnet-4-20250514",
+        temperature=0.1,
+        max_tokens=4096,
+        api_key=settings.anthropic_api_key,
+    )
 
-gpt4o = ChatOpenAI(
-    model="gpt-4o",
-    temperature=0.1,
-    max_tokens=4096,
-    api_key=settings.openai_api_key,
-)
 
-opus = ChatAnthropic(
-    model="claude-opus-4-20250514",
-    temperature=0.1,
-    max_tokens=4096,
-    api_key=settings.anthropic_api_key,
-)
+@lru_cache(maxsize=None)
+def get_opus() -> ChatAnthropic:
+    return ChatAnthropic(
+        model="claude-opus-4-20250514",
+        temperature=0.1,
+        max_tokens=4096,
+        api_key=settings.anthropic_api_key,
+    )
+
+
+@lru_cache(maxsize=None)
+def get_gpt4o() -> ChatOpenAI:
+    return ChatOpenAI(
+        model="gpt-4o",
+        temperature=0.1,
+        max_tokens=4096,
+        api_key=settings.openai_api_key,
+    )
 
 
 def parse_query(state: dict) -> dict:
@@ -36,7 +47,7 @@ def parse_query(state: dict) -> dict:
         ),
         HumanMessage(content=state["query"]),
     ]
-    parsed = sonnet.with_structured_output(ParsedQuery).invoke(messages)
+    parsed = get_sonnet().with_structured_output(ParsedQuery).invoke(messages)
     state["parsed_query"] = parsed.model_dump()
     return state
 
@@ -51,7 +62,7 @@ def plan_tasks(state: dict) -> dict:
         ),
         HumanMessage(content=str(state["parsed_query"])),
     ]
-    plan = sonnet.with_structured_output(TaskPlan).invoke(messages)
+    plan = get_sonnet().with_structured_output(TaskPlan).invoke(messages)
     state["plan"] = plan.tasks
     state["plan_reasoning"] = plan.reasoning
     return state

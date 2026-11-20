@@ -171,7 +171,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
-resource "aws_vpc_flow_log" "this" {
+resource "aws_flow_log" "this" {
   iam_role_arn    = aws_iam_role.flow_logs.arn
   log_destination = aws_cloudwatch_log_group.flow_logs.arn
   traffic_type    = "ALL"

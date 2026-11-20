@@ -45,6 +45,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     id     = "expire-artifacts"
     status = "Enabled"
 
+    filter {}
+
     expiration {
       days = var.artifact_expiration_days
     }
@@ -67,6 +69,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   rule {
     id     = "abort-incomplete-multipart"
     status = "Enabled"
+
+    filter {}
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 7

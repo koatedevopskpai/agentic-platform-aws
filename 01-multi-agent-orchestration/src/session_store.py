@@ -1,13 +1,18 @@
 ﻿import boto3
 import json
 import os
+from functools import lru_cache
 from datetime import datetime, timedelta
 from typing import Optional
 from .models import BrandAnalysis
 
-dynamodb = boto3.resource("dynamodb")
 table_name = os.getenv("SESSION_TABLE", "AGENTICOPS-sessions-01")
-table = dynamodb.Table(table_name)
+
+
+@lru_cache(maxsize=None)
+def _table():
+    """Created on first use so importing this module needs no AWS region or credentials."""
+    return boto3.resource("dynamodb").Table(table_name)
 
 
 class SessionStore:
@@ -26,12 +31,12 @@ class SessionStore:
             "state": "active",
             "events": [],
         }
-        table.put_item(Item=item)
+        _table().put_item(Item=item)
         return item
 
     @staticmethod
     def append_event(session_id: str, event: dict):
-        table.update_item(
+        _table().update_item(
             Key={"session_id": session_id},
             UpdateExpression="SET #evts = list_append(if_not_exists(#evts, :empty), :event)",
             ExpressionAttributeNames={"#evts": "events"},
@@ -43,12 +48,12 @@ class SessionStore:
 
     @staticmethod
     def get_session(session_id: str) -> Optional[dict]:
-        response = table.get_item(Key={"session_id": session_id})
+        response = _table().get_item(Key={"session_id": session_id})
         return response.get("Item")
 
     @staticmethod
     def save_analysis(session_id: str, analysis: BrandAnalysis):
-        table.update_item(
+        _table().update_item(
             Key={"session_id": session_id},
             UpdateExpression="SET analysis = :analysis, #st = :status, updated_at = :now",
             ExpressionAttributeNames={"#st": "state"},

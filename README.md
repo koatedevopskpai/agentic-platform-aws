@@ -3,10 +3,11 @@
 **AI platform reference design and implementation: multi-agent orchestration, an LLM evaluation platform, and cloud infrastructure as code (AWS, Terraform).**
 
 This repository contains agent/evaluation reference code, cloud configuration and
-design documents. The current validation attempt stops before test collection on an
-invalid scenario TOML file; it does not establish a working deployment or a passing
-suite. See [the claim-sweep evidence](evidence/W5-06.md). Files under `shared/ci-cd/`
-are pipeline templates; no GitHub Actions run was returned for `main`.
+design documents. **Nothing here is deployed to AWS**, and no end-to-end run against real
+Bedrock, Anthropic or OpenAI models is recorded. The packaging and test failures recorded in
+[the claim-sweep evidence](evidence/W5-06.md) (an invalid scenario TOML file, and tests that could not
+be collected) were fixed on 20 Nov 2026: see [Status](#status-checked-20-nov-2026).
+Files under `shared/ci-cd/` are pipeline templates; no GitHub Actions run exists for `main`.
 
 ---
 
@@ -23,6 +24,29 @@ are pipeline templates; no GitHub Actions run was returned for `main`.
 | 07 — Technical Leadership | ADRs, mentorship plan, "state of the AI stack" for the CTO (design docs) |
 
 > Implementation priority follows the engineering spine: orchestration → evals → cloud infrastructure. The remaining scenarios are captured as design docs and are built out on the roadmap.
+
+## Status (checked 20 Nov 2026)
+
+This is a **reference design with a local implementation. Nothing here is deployed to AWS**, and no end-to-end run against real
+Bedrock/Anthropic/OpenAI models is recorded in this repository.
+
+| Scenario | Verified | Not verified |
+|---|---|---|
+| 01 Multi-agent orchestration | Installs with `pip install -e ".[dev]"`; **17 tests pass offline** (no API keys, no AWS config); the LangGraph graph builds and has the expected nodes | No live LLM run. Competitor and social tools return fixed demonstration data. The DynamoDB session store has not been run against AWS. |
+| 02 LLM eval platform | Installs; **47 tests pass offline**; guardrail CLI runs (`agenticops-eval guard --text "..."`) | No recorded run of the LLM-as-judge path against live models. Guardrails are regex rules: a first line of defence, not a safety guarantee. **Known defect:** the guard CLI prints `PASSED all guardrails` for input a guard flagged, because it compares the risk score (0.35 per flag) with a 0.7 block threshold and ignores `passed: false`. |
+| 04 Cloud and data infrastructure | `terraform validate` passes for `environments/dev` (`terraform init -backend=false`) | **Never planned or applied**; no AWS resources exist. Bedrock model IDs in `allowed_models` were not checked against the Bedrock catalogue. |
+| 03, 05, 06, 07 | Design documents only | Not built |
+
+Run the checks yourself:
+
+```bash
+cd 01-multi-agent-orchestration && pip install -e ".[dev]" && pytest
+cd ../02-llm-eval-platform      && pip install -e ".[dev]" && pytest
+cd ../04-cloud-data-infrastructure/terraform/environments/dev && terraform init -backend=false && terraform validate
+```
+
+The `AGENTICOPS` spelling in resource names and design documents is a placeholder prefix from an earlier rename. Python packages are
+`agenticops_orchestrator` and `agenticops_eval`.
 
 ## Repository structure
 

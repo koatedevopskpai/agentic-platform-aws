@@ -1,5 +1,5 @@
 ﻿import pytest
-from AGENTICOPS_eval.eval_runner import EvalRunner, EvalResult
+from agenticops_eval.eval_runner import EvalRunner, EvalResult
 
 
 class TestEvalRunner:
@@ -79,7 +79,7 @@ class TestEvalRunner:
 
 class TestDatasetGenerator:
     def test_generate_synthetic(self):
-        from AGENTICOPS_eval.dataset_generator import DatasetGenerator
+        from agenticops_eval.dataset_generator import DatasetGenerator
         items = DatasetGenerator.generate_synthetic(count=10)
         assert len(items) == 10
         for item in items:
@@ -88,7 +88,7 @@ class TestDatasetGenerator:
             assert "input" in item
 
     def test_generate_synthetic_categories(self):
-        from AGENTICOPS_eval.dataset_generator import DatasetGenerator
+        from agenticops_eval.dataset_generator import DatasetGenerator
         items = DatasetGenerator.generate_synthetic(count=100)
         categories = set(i["category"] for i in items)
         assert "brand_sentiment" in categories
@@ -97,20 +97,20 @@ class TestDatasetGenerator:
 
 class TestPromptRegistry:
     def test_list_prompts_empty(self):
-        from AGENTICOPS_eval.prompt_registry import PromptRegistry
+        from agenticops_eval.prompt_registry import PromptRegistry
         import tempfile
         with tempfile.TemporaryDirectory() as tmp:
             registry = PromptRegistry(registry_path=tmp)
             assert registry.list_prompts() == []
 
     def test_hash_consistency(self):
-        from AGENTICOPS_eval.prompt_registry import PromptRegistry
+        from agenticops_eval.prompt_registry import PromptRegistry
         h1 = PromptRegistry._hash({"system": "test", "user": "test"})
         h2 = PromptRegistry._hash({"system": "test", "user": "test"})
         assert h1 == h2
 
     def test_hash_different_content(self):
-        from AGENTICOPS_eval.prompt_registry import PromptRegistry
+        from agenticops_eval.prompt_registry import PromptRegistry
         h1 = PromptRegistry._hash({"system": "prompt A"})
         h2 = PromptRegistry._hash({"system": "prompt B"})
         assert h1 != h2
@@ -118,14 +118,14 @@ class TestPromptRegistry:
 
 class TestDashboard:
     def test_empty_dashboard(self):
-        from AGENTICOPS_eval.dashboard import EvalDashboard
+        from agenticops_eval.dashboard import EvalDashboard
         dashboard = EvalDashboard()
         cost = dashboard.cost_summary()
         assert cost["total_cost"] == 0
         assert cost["total_evals"] == 0
 
     def test_dashboard_with_results(self):
-        from AGENTICOPS_eval.dashboard import EvalDashboard
+        from agenticops_eval.dashboard import EvalDashboard
         from datetime import datetime
         dashboard = EvalDashboard()
         dashboard.add_result({

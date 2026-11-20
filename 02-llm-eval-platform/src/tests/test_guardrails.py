@@ -1,5 +1,5 @@
 ﻿import pytest
-from AGENTICOPS_eval.guardrails import (
+from agenticops_eval.guardrails import (
     PiiDetector,
     PromptInjectionDetector,
     SafetyClassifier,
@@ -150,7 +150,7 @@ class TestGuardrailEngine:
         assert not should_block
 
     def test_guardrail_result_model(self):
-        from AGENTICOPS_eval.guardrails import GuardrailResult
+        from agenticops_eval.guardrails import GuardrailResult
         gr = GuardrailResult(passed=True, risk_score=0.0, flags=[])
         assert gr.dict()["passed"] is True
         assert gr.dict()["risk_score"] == 0.0
